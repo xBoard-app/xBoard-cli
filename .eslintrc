@@ -1,13 +1,15 @@
 {
   "extends": ["oclif", "oclif-typescript"],
   "rules": {
-    "indent": ["error", 2, {"SwitchCase": 1}],
+    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "semi": "off",
     "node/no-unsupported-features/node-builtins": [
       "error",
       {
         "version": ">=10.1.0",
         "ignores": []
       }
-    ]
+    ],
+    "object-curly-spacing": "off"
   }
 }
