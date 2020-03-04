@@ -8,6 +8,7 @@ import {
   copyFileToProject,
   addProjectToCompose,
 } from '../tasks';
+import { addProjectToEnvoy } from '../tasks/envoy';
 
 const exists = async (path: string) => {
   try {
@@ -19,7 +20,6 @@ const exists = async (path: string) => {
 };
 
 export const generateService = async (name: string, force: boolean) => {
-  const dependencies = ['@grpc/proto-loader', '@nestjs/microservices', 'grpc'];
   const path = join(process.cwd(), 'services', name);
   const dirExists = await exists(path);
 
@@ -27,6 +27,7 @@ export const generateService = async (name: string, force: boolean) => {
     throw new Error('Service already exists');
   }
 
+  const dependencies = ['@grpc/proto-loader', '@nestjs/microservices', 'grpc'];
   const tasks = new Listr([
     {
       title: 'Remove project directory',
@@ -46,8 +47,12 @@ export const generateService = async (name: string, force: boolean) => {
       task: () => copyFileToProject(name, 'Dockerfile'),
     },
     {
-      title: 'Add project to docker-compose',
-      task: () => addProjectToCompose(name),
+      title: 'Add project to docker-compose.yml',
+      task: ctx => addProjectToCompose(name, ctx),
+    },
+    {
+      title: 'Add project to envoy.yaml',
+      task: ctx => addProjectToEnvoy(name, ctx),
     },
   ]);
 

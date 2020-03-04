@@ -1,14 +1,9 @@
 import { promises as fs } from 'fs';
 import { parse, stringify } from 'yaml';
 import { join } from 'path';
+import { getConfigSrc } from '../utils/utils';
 
-interface ServicesConfig {
-  [key: string]: {
-    ports: string[];
-  };
-}
-
-const getPortNumber = (services: ServicesConfig) => {
+const getPortNumber = (services: DockerCompose.Services) => {
   return Object.keys(services)
     .filter(
       serviceName => serviceName !== 'frontend' && serviceName !== 'proxy',
@@ -26,12 +21,16 @@ const getPortNumber = (services: ServicesConfig) => {
     }, 50051);
 };
 
-export const addProjectToCompose = async (name: string) => {
-  const composeFile = await fs.readFile(
-    join(process.cwd(), 'cli', 'files', 'docker-compose.yml'),
-    'utf8',
-  );
-  const composeObj = parse(composeFile);
+export const addProjectToCompose = async (name: string, ctx: any) => {
+  const composeSrc = await getConfigSrc('docker-compose.yml');
+  const composeFile = await fs.readFile(composeSrc, 'utf8');
+  const composeObj: DockerCompose.RootObject = parse(composeFile);
+  if (composeObj.services[name]) {
+    delete composeObj.services[name];
+  }
+  const port = getPortNumber(composeObj.services);
+  ctx.port = port;
+
   composeObj.services[name] = {
     image: `x-board-${name}:dev`,
     networks: ['envoymesh'],
@@ -40,13 +39,10 @@ export const addProjectToCompose = async (name: string) => {
       target: 'dev',
     },
     depends_on: ['proxy'],
-    ports: [
-      `${getPortNumber(composeObj.services)}:${getPortNumber(
-        composeObj.services,
-      )}`,
-    ],
+    ports: [`${port}:${port}`],
   };
-  return fs.writeFile(
+
+  await fs.writeFile(
     join(process.cwd(), 'docker-compose.yml'),
     stringify(composeObj),
   );
