@@ -24,7 +24,7 @@ export const generateService = async (name: string, force: boolean) => {
   const dirExists = await exists(path);
 
   if (dirExists && !force) {
-    throw new Error('Service already exists');
+    throw new Error('Service already exists, use --force to overwrite');
   }
 
   const dependencies = ['@grpc/proto-loader', '@nestjs/microservices', 'grpc'];

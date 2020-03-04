@@ -28,29 +28,8 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`xBoard-cli hello [FILE]`](#xboard-cli-hello-file)
 * [`xBoard-cli help [COMMAND]`](#xboard-cli-help-command)
-* [`xBoard-cli new [FILE]`](#xboard-cli-new-file)
-
-## `xBoard-cli hello [FILE]`
-
-describe the command here
-
-```
-USAGE
-  $ xBoard-cli hello [FILE]
-
-OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
-
-EXAMPLE
-  $ xBoard-cli hello
-  hello world from ./src/hello.ts!
-```
-
-_See code: [src/commands/hello.ts](https://github.com/mareksl/xBoard-cli/blob/v0.0.0/src/commands/hello.ts)_
+* [`xBoard-cli new [NAME]`](#xboard-cli-new-name)
 
 ## `xBoard-cli help [COMMAND]`
 
@@ -69,18 +48,18 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.3/src/commands/help.ts)_
 
-## `xBoard-cli new [FILE]`
+## `xBoard-cli new [NAME]`
 
-describe the command here
+Generates new project
 
 ```
 USAGE
-  $ xBoard-cli new [FILE]
+  $ xBoard-cli new [NAME]
 
 OPTIONS
   -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help              show CLI help
+  -t, --type=(s|service)  (required) type of project to generate
 ```
 
 _See code: [src/commands/new.ts](https://github.com/mareksl/xBoard-cli/blob/v0.0.0/src/commands/new.ts)_
